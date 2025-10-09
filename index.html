@@ -15,13 +15,14 @@
     body {
       background-color: #0d0d0d;
       color: #fff;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      position: relative; /* для солнца на мобильной версии */
+      position: relative;
       z-index: 0;
+      padding: 1rem;
     }
 
     h1 {
@@ -31,7 +32,6 @@
       letter-spacing: 1px;
     }
 
-    /* Подзаголовок только для мобильных */
     h2 {
       display: none;
     }
@@ -45,7 +45,7 @@
       max-width: 600px;
       box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
       position: relative;
-      z-index: 1; /* поверх солнца */
+      z-index: 1;
     }
 
     .search-container input {
@@ -75,13 +75,6 @@
 
     /* Мобильная версия */
     @media (max-width: 600px) {
-      body {
-        justify-content: flex-start;
-        padding: 1rem;
-        background: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
-      }
-
-      /* Подзаголовок для мобильной версии */
       h2 {
         display: block;
         font-size: 1rem;
@@ -90,7 +83,7 @@
         text-align: center;
       }
 
-      /* Солнце на мобильных */
+      /* Солнце сверху для мобильных */
       body::before {
         content: "";
         position: absolute;
@@ -110,12 +103,11 @@
         margin-top: 2rem;
       }
 
+      /* Форма поиска теперь относительная, не фиксированная */
       .search-container {
         flex-direction: column;
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
+        position: relative;
+        margin: 2rem auto 3rem auto;
         width: 90%;
         max-width: 400px;
         background-color: #222;
@@ -171,4 +163,5 @@
   </script>
 </body>
 </html>
+
 
