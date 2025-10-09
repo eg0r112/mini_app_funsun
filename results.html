@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Результаты поиска | FUN&SUN</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: #0d0d0d;
+      color: #fff;
+      display: flex;
+      flex-direction: row;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Панель настроек */
+    .settings {
+      background-color: #1b1b1b;
+      width: 250px;
+      padding: 1.5rem;
+      border-right: 1px solid #333;
+      transition: transform 0.3s ease;
+      z-index: 200;
+    }
+
+    .settings h2 {
+      color: #ffcc00;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+    }
+
+    .settings ul {
+      list-style: none;
+    }
+
+    .settings li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #333;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .settings li:hover {
+      color: #ffcc00;
+    }
+
+    /* Контент */
+    .content {
+      flex: 1;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Верхняя панель (только для телефона, скрыта на ПК) */
+    .top-bar {
+      display: none;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .toggle-settings {
+      background-color: #ffcc00;
+      color: #000;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      z-index: 210;
+    }
+
+    .toggle-settings:hover {
+      background-color: #ffdb4d;
+    }
+
+    .logo {
+      color: #ffcc00;
+      font-weight: bold;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+    }
+
+    /* Строка поиска */
+    .search-bar {
+      display: flex;
+      background-color: #1b1b1b;
+      border-radius: 50px;
+      overflow: hidden;
+      width: 100%;
+      box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      outline: none;
+      color: #fff;
+      background: transparent;
+    }
+
+    .search-bar button {
+      background-color: #ffcc00;
+      color: #000;
+      border: none;
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .search-bar button:hover {
+      background-color: #ffdb4d;
+    }
+
+    /* Результаты */
+    .results {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .card {
+      background-color: #1b1b1b;
+      border-radius: 15px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 0 10px rgba(255, 204, 0, 0.1);
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
+    }
+
+    .card h3 {
+      color: #ffcc00;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      color: #ccc;
+      font-size: 0.95rem;
+    }
+
+    /* Затемнение при открытии меню */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      z-index: 150;
+    }
+
+    .overlay.visible {
+      display: block;
+    }
+
+    /* Мобильная адаптация */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .settings {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        transform: translateX(-100%);
+        border-right: none;
+        border-bottom: 1px solid #333;
+      }
+
+      .settings.visible {
+        transform: translateX(0);
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.6);
+      }
+
+      .top-bar {
+        display: flex;
+      }
+
+      .search-bar {
+        flex-direction: column;
+        border-radius: 15px;
+      }
+
+      .search-bar input,
+      .search-bar button {
+        width: 100%;
+        border-radius: 0;
+      }
+
+      .search-bar button {
+        border-top: 1px solid #333;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Панель настроек -->
+  <aside class="settings" id="settingsPanel">
+    <h2>Настройки</h2>
+    <ul>
+      <li>Сортировать по цене</li>
+      <li>Сортировать по дате</li>
+      <li>Прямые рейсы</li>
+      <li>С пересадками</li>
+      <li>Фильтр авиакомпаний</li>
+    </ul>
+  </aside>
+
+  <!-- Затемнение -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Контент -->
+  <main class="content">
+    <div class="top-bar">
+      <button class="toggle-settings" id="toggleBtn">Настройки</button>
+      <div class="logo">FUN&SUN</div>
+    </div>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Изменить направление" />
+      <button id="searchBtn">Найти</button>
+    </div>
+
+    <div class="results">
+      <div class="card">
+        <h3>Москва → Ханой</h3>
+        <p>Прямой рейс | 10:30 — 19:20 | от 45 000 ₽</p>
+      </div>
+      <div class="card">
+        <h3>Санкт-Петербург → Дананг</h3>
+        <p>1 пересадка | 08:00 — 23:15 | от 51 200 ₽</p>
+      </div>
+      <div class="card">
+        <h3>Новосибирск → Хошимин</h3>
+        <p>2 пересадки | 06:45 — 21:30 | от 56 000 ₽</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Переход при новом поиске
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const query = document.getElementById('searchInput').value.trim();
+      if (query) {
+        window.location.href = `results.html?query=${encodeURIComponent(query)}`;
+      } else {
+        alert('Введите направление для поиска');
+      }
+    });
+
+    // Подстановка запроса из первой страницы
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('query');
+    if (query) {
+      document.getElementById('searchInput').value = query;
+    }
+
+    // Переключение панели на телефоне
+    const toggleBtn = document.getElementById('toggleBtn');
+    const settingsPanel = document.getElementById('settingsPanel');
+    const overlay = document.getElementById('overlay');
+
+    toggleBtn.addEventListener('click', () => {
+      const isVisible = settingsPanel.classList.toggle('visible');
+      overlay.classList.toggle('visible', isVisible);
+
+      // Скрыть кнопку при открытии
+      toggleBtn.style.display = isVisible ? 'none' : 'inline-block';
+    });
+
+    overlay.addEventListener('click', () => {
+      settingsPanel.classList.remove('visible');
+      overlay.classList.remove('visible');
+      toggleBtn.style.display = 'inline-block';
+    });
+  </script>
+</body>
+</html>
