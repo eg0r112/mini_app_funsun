@@ -61,7 +61,7 @@
       gap: 1.5rem;
     }
 
-    /* Верхняя панель (только для телефона, скрыта на ПК) */
+    /* Верхняя панель (только для телефона) */
     .top-bar {
       display: none;
       justify-content: space-between;
@@ -135,9 +135,10 @@
     }
 
     .card {
+      display: flex;
       background-color: #1b1b1b;
       border-radius: 15px;
-      padding: 1rem 1.5rem;
+      overflow: hidden;
       box-shadow: 0 0 10px rgba(255, 204, 0, 0.1);
       transition: transform 0.2s;
     }
@@ -147,14 +148,65 @@
       box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
     }
 
-    .card h3 {
-      color: #ffcc00;
-      margin-bottom: 0.5rem;
+    .card img {
+      width: 150px;
+      object-fit: cover;
     }
 
-    .card p {
+    .card-content {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .card-content h3 {
+      color: #ffcc00;
+      font-size: 1.1rem;
+    }
+
+    .stars {
+      color: #ffcc00;
+      font-size: 0.9rem;
+    }
+
+    .location {
       color: #ccc;
       font-size: 0.95rem;
+    }
+
+    .amenities {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      color: #aaa;
+    }
+
+    .amenities span {
+      background-color: #333;
+      padding: 2px 6px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .price {
+      font-weight: bold;
+      color: #ffcc00;
+    }
+
+    .discount {
+      color: #ff6666;
+      font-size: 0.85rem;
+      margin-left: 0.5rem;
+    }
+
+    .dates {
+      font-size: 0.85rem;
+      color: #ccc;
     }
 
     /* Затемнение при открытии меню */
@@ -212,6 +264,15 @@
       .search-bar button {
         border-top: 1px solid #333;
       }
+
+      .card {
+        flex-direction: column;
+      }
+
+      .card img {
+        width: 100%;
+        height: 180px;
+      }
     }
   </style>
 </head>
@@ -245,16 +306,60 @@
 
     <div class="results">
       <div class="card">
-        <h3>Москва → Ханой</h3>
-        <p>Прямой рейс | 10:30 — 19:20 | от 45 000 ₽</p>
+        <img src="https://cdn-ya.readytotrip.com/get-altay/10768923/2a0000018a5da39f47d06beac164769c80c6/XXL" alt="Отель 1">
+        <div class="card-content">
+          <h3>Отель Paradise</h3>
+          <div class="stars">★★★★☆</div>
+          <div class="location">Паттайя, Таиланд</div>
+          <div class="amenities">
+            <span>📶 Wi-Fi</span>
+            <span>❄️ Кондиционер</span>
+            <span>🏊 Бассейн</span>
+          </div>
+          <div>
+            <span class="price">7 200 ₽</span>
+            <span class="discount">10% скидка</span>
+          </div>
+          <div class="dates">12–19 октября | 7 ночей</div>
+        </div>
       </div>
+
       <div class="card">
-        <h3>Санкт-Петербург → Дананг</h3>
-        <p>1 пересадка | 08:00 — 23:15 | от 51 200 ₽</p>
+        <img src="https://cdn-ya.readytotrip.com/get-altay/10768923/2a0000018a5da39f47d06beac164769c80c6/XXL" alt="Отель 2">
+        <div class="card-content">
+          <h3>Отель Sunny Beach</h3>
+          <div class="stars">★★★☆☆</div>
+          <div class="location">Хургада, Египет</div>
+          <div class="amenities">
+            <span>📶 Wi-Fi</span>
+            <span>🍳 Завтрак</span>
+            <span>🏊 Бассейн</span>
+          </div>
+          <div>
+            <span class="price">5 800 ₽</span>
+            <span class="discount">5% скидка</span>
+          </div>
+          <div class="dates">15–22 октября | 7 ночей</div>
+        </div>
       </div>
+
       <div class="card">
-        <h3>Новосибирск → Хошимин</h3>
-        <p>2 пересадки | 06:45 — 21:30 | от 56 000 ₽</p>
+        <img src="https://cdn-ya.readytotrip.com/get-altay/10768923/2a0000018a5da39f47d06beac164769c80c6/XXL" alt="Отель 3">
+        <div class="card-content">
+          <h3>Отель Ocean View</h3>
+          <div class="stars">★★★★★</div>
+          <div class="location">Бали, Индонезия</div>
+          <div class="amenities">
+            <span>📶 Wi-Fi</span>
+            <span>❄️ Кондиционер</span>
+            <span>💆 SPA</span>
+          </div>
+          <div>
+            <span class="price">12 500 ₽</span>
+            <span class="discount">15% скидка</span>
+          </div>
+          <div class="dates">20–27 октября | 7 ночей</div>
+        </div>
       </div>
     </div>
   </main>
@@ -285,8 +390,6 @@
     toggleBtn.addEventListener('click', () => {
       const isVisible = settingsPanel.classList.toggle('visible');
       overlay.classList.toggle('visible', isVisible);
-
-      // Скрыть кнопку при открытии
       toggleBtn.style.display = isVisible ? 'none' : 'inline-block';
     });
 
@@ -298,3 +401,4 @@
   </script>
 </body>
 </html>
+
