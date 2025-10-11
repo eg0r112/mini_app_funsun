@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FUN&SUN | Поиск билетов</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Segoe UI", Roboto, sans-serif; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Roboto, sans-serif;
+    }
+
     body {
       background-color: #0d0d0d;
       color: #fff;
@@ -14,11 +20,21 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      position: relative;
+      position: relative; /* для солнца на мобильной версии */
       z-index: 0;
     }
-    h1 { font-size: 2rem; margin-bottom: 2rem; color: #ffcc00; letter-spacing: 1px; }
-    h2 { display: none; }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      color: #ffcc00;
+      letter-spacing: 1px;
+    }
+
+    /* Подзаголовок только для мобильных */
+    h2 {
+      display: none;
+    }
 
     .search-container {
       display: flex;
@@ -29,7 +45,7 @@
       max-width: 600px;
       box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
       position: relative;
-      z-index: 1;
+      z-index: 1; /* поверх солнца */
     }
 
     .search-container input {
@@ -52,11 +68,29 @@
       cursor: pointer;
       transition: background-color 0.3s;
     }
-    .search-container button:hover { background-color: #ffdb4d; }
 
+    .search-container button:hover {
+      background-color: #ffdb4d;
+    }
+
+    /* Мобильная версия */
     @media (max-width: 600px) {
-      body { justify-content: flex-start; padding: 1rem; background: linear-gradient(to bottom, #0d0d0d, #1a1a1a); }
-      h2 { display: block; font-size: 1rem; color: #ccc; margin-bottom: 1.5rem; text-align: center; }
+      body {
+        justify-content: flex-start;
+        padding: 1rem;
+        background: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
+      }
+
+      /* Подзаголовок для мобильной версии */
+      h2 {
+        display: block;
+        font-size: 1rem;
+        color: #ccc;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      /* Солнце на мобильных */
       body::before {
         content: "";
         position: absolute;
@@ -70,7 +104,12 @@
         opacity: 0.3;
         z-index: 0;
       }
-      h1 { font-size: 1.8rem; margin-top: 2rem; }
+
+      h1 {
+        font-size: 1.8rem;
+        margin-top: 2rem;
+      }
+
       .search-container {
         flex-direction: column;
         position: fixed;
@@ -84,13 +123,30 @@
         border-radius: 25px;
         box-shadow: 0 4px 20px rgba(255, 204, 0, 0.3);
       }
-      .search-container input, .search-container button { width: 100%; font-size: 1.1rem; margin: 0.3rem 0; border-radius: 12px; }
-      .search-container button { border-top: 1px solid #333; padding: 1rem; }
+
+      .search-container input,
+      .search-container button {
+        width: 100%;
+        font-size: 1.1rem;
+        margin: 0.3rem 0;
+        border-radius: 12px;
+      }
+
+      .search-container button {
+        border-top: 1px solid #333;
+        padding: 1rem;
+      }
     }
 
+    /* ПК-версия: скрываем мобильные элементы */
     @media (min-width: 601px) {
-      h2 { display: none; }
-      body::before { display: none; }
+      h2 {
+        display: none;
+      }
+
+      body::before {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -104,34 +160,17 @@
   </div>
 
   <script>
-    // Проверяем, что WebApp объект доступен
-    const tg = window.Telegram?.WebApp;
-  
-    if (tg) {
-      tg.ready(); // уведомляем Telegram, что WebApp готов
-  
-      document.getElementById('searchBtn').addEventListener('click', () => {
-        const query = document.getElementById('searchInput').value.trim();
-        if (!query) {
-          tg.showAlert('Введите направление для поиска');
-          return;
-        }
-  
-        const url = `https://eg0r112.github.io/mini_app_funsun/results.html?query=${encodeURIComponent(query)}`;
-        tg.openLink(url); // открывает страницу внутри Telegram
-      });
-    } else {
-      // В обычном браузере fallback
-      document.getElementById('searchBtn').addEventListener('click', () => {
-        const query = document.getElementById('searchInput').value.trim();
-        if (!query) {
-          alert('Введите направление для поиска');
-          return;
-        }
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const query = document.getElementById('searchInput').value.trim();
+      if (query) {
         window.location.href = `results.html?query=${encodeURIComponent(query)}`;
-      });
-    }
+      } else {
+        alert('Введите направление для поиска');
+      }
+    });
   </script>
 </body>
 </html>
+
+
 
