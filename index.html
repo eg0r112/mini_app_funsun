@@ -135,130 +135,160 @@
     </div>
 
     <script>
-        // Получаем объект Telegram WebApp
-        const tg = window.Telegram?.WebApp;
-        const searchBtn = document.getElementById('searchBtn');
-        const searchInput = document.getElementById('searchInput');
+        // // Получаем объект Telegram WebApp
+        // const tg = window.Telegram?.WebApp;
+        // const searchBtn = document.getElementById('searchBtn');
+        // const searchInput = document.getElementById('searchInput');
         
-        // Функция для блокировки/разблокировки кнопки
-        function setButtonState(disabled, text) {
-            searchBtn.disabled = disabled;
-            searchBtn.textContent = text;
-        }
+        // // Функция для блокировки/разблокировки кнопки
+        // function setButtonState(disabled, text) {
+        //     searchBtn.disabled = disabled;
+        //     searchBtn.textContent = text;
+        // }
         
-        // Инициализация Web App
-        function initWebApp() {
-            if (tg) {
-                tg.ready(); // уведомляем Telegram, что WebApp готов
-                tg.expand(); // расширяем приложение на весь экран
+        // // Инициализация Web App
+        // function initWebApp() {
+        //     if (tg) {
+        //         tg.ready(); // уведомляем Telegram, что WebApp готов
+        //         tg.expand(); // расширяем приложение на весь экран
                 
-                // Настраиваем кнопку закрытия
-                tg.MainButton.hide();
-                tg.BackButton.hide();
+        //         // Настраиваем кнопку закрытия
+        //         tg.MainButton.hide();
+        //         tg.BackButton.hide();
                 
-                // Отключаем автоматическое закрытие
-                tg.enableClosingConfirmation();
+        //         // Отключаем автоматическое закрытие
+        //         tg.enableClosingConfirmation();
                 
-                // Переопределяем поведение закрытия
-                tg.onEvent('viewportChanged', function() {
-                    console.log('Viewport changed');
-                });
+        //         // Переопределяем поведение закрытия
+        //         tg.onEvent('viewportChanged', function() {
+        //             console.log('Viewport changed');
+        //         });
                 
-                console.log('Telegram Web App инициализирован');
-            } else {
-                console.log('Telegram Web App недоступен - работаем в обычном браузере');
-            }
-        }
+        //         console.log('Telegram Web App инициализирован');
+        //     } else {
+        //         console.log('Telegram Web App недоступен - работаем в обычном браузере');
+        //     }
+        // }
         
-        // Отправка данных боту
-        function sendDataToBot() {
-            const query = searchInput.value.trim();
+        // // Отправка данных боту
+        // function sendDataToBot() {
+        //     const query = searchInput.value.trim();
             
-            if (!query) {
-                return;
-            }
+        //     if (!query) {
+        //         return;
+        //     }
 
-            if (!tg) {
-                return;
-            }
+        //     if (!tg) {
+        //         return;
+        //     }
 
-            // Блокируем кнопку
-            setButtonState(true, '⏳ Поиск...');
+        //     // Блокируем кнопку
+        //     setButtonState(true, '⏳ Поиск...');
 
-            try {
-                // Создаем структурированные данные
-                const data = {
-                    searchQuery: query,
-                    timestamp: new Date().toISOString(),
-                    source: 'mini_app'
-                };
+        //     try {
+        //         // Создаем структурированные данные
+        //         const data = {
+        //             searchQuery: query,
+        //             timestamp: new Date().toISOString(),
+        //             source: 'mini_app'
+        //         };
                 
-                console.log('Отправляем данные:', data);
+        //         console.log('Отправляем данные:', data);
                 
-                // Сохраняем данные в localStorage
-                localStorage.setItem('searchQuery', query);
-                localStorage.setItem('searchData', JSON.stringify(data));
+        //         // Сохраняем данные в localStorage
+        //         localStorage.setItem('searchQuery', query);
+        //         localStorage.setItem('searchData', JSON.stringify(data));
                 
-                // Отправляем данные боту через POST запрос
-                setTimeout(() => {
-                    // Отправляем через POST запрос к боту
-                    fetch('https://api.telegram.org/bot8223263312:AAFnIhUBUUmUJEpu-ZW0mWjHlRRma2McoNk/sendMessage', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            chat_id: tg.initDataUnsafe.user?.id || '5143241640', // ID пользователя или ваш ID
-                            text: `🔍 Новый поиск: ${query}\n⏰ Время: ${data.timestamp}\n📱 Источник: мини-приложение`,
-                            parse_mode: 'HTML'
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(result => {
-                        console.log('Данные отправлены боту через POST:', result);
-                    })
-                    .catch(error => {
-                        console.error('Ошибка при отправке через POST:', error);
+        //         // Отправляем данные боту через POST запрос
+        //         setTimeout(() => {
+        //             // Отправляем через POST запрос к боту
+        //             fetch('https://api.telegram.org/bot8223263312:AAFnIhUBUUmUJEpu-ZW0mWjHlRRma2McoNk/sendMessage', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/json',
+        //                 },
+        //                 body: JSON.stringify({
+        //                     chat_id: tg.initDataUnsafe.user?.id || '5143241640', // ID пользователя или ваш ID
+        //                     text: `🔍 Новый поиск: ${query}\n⏰ Время: ${data.timestamp}\n📱 Источник: мини-приложение`,
+        //                     parse_mode: 'HTML'
+        //                 })
+        //             })
+        //             .then(response => response.json())
+        //             .then(result => {
+        //                 console.log('Данные отправлены боту через POST:', result);
+        //             })
+        //             .catch(error => {
+        //                 console.error('Ошибка при отправке через POST:', error);
                         
-                        // Fallback: попробуем tg.sendData
-                        if (tg && typeof tg.sendData === 'function') {
-                            try {
-                                tg.sendData(JSON.stringify(data));
-                                console.log('Данные отправлены боту через tg.sendData');
-                            } catch (sendError) {
-                                console.error('Ошибка при отправке через tg.sendData:', sendError);
-                            }
-                        }
-                    });
-                }, 100);
+        //                 // Fallback: попробуем tg.sendData
+        //                 if (tg && typeof tg.sendData === 'function') {
+        //                     try {
+        //                         tg.sendData(JSON.stringify(data));
+        //                         console.log('Данные отправлены боту через tg.sendData');
+        //                     } catch (sendError) {
+        //                         console.error('Ошибка при отправке через tg.sendData:', sendError);
+        //                     }
+        //                 }
+        //             });
+        //         }, 100);
                 
-                // Переход на вторую страничку с задержкой
-                setTimeout(() => {
-                    window.location.href = `results.html?query=${encodeURIComponent(query)}`;
-                }, 500);
+        //         // Переход на вторую страничку с задержкой
+        //         setTimeout(() => {
+        //             window.location.href = `results.html?query=${encodeURIComponent(query)}`;
+        //         }, 500);
                 
-            } catch (error) {
-                console.error('Ошибка при обработке:', error);
+        //     } catch (error) {
+        //         console.error('Ошибка при обработке:', error);
                 
-                // Разблокируем кнопку при ошибке
-                setButtonState(false, 'Найти');
-            }
-        }
+        //         // Разблокируем кнопку при ошибке
+        //         setButtonState(false, 'Найти');
+        //     }
+        // }
         
-        // Обработчики событий
-        searchBtn.addEventListener('click', sendDataToBot);
+        // // Обработчики событий
+        // searchBtn.addEventListener('click', sendDataToBot);
         
-        searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendDataToBot();
+        // searchInput.addEventListener('keypress', (e) => {
+        //     if (e.key === 'Enter') {
+        //         sendDataToBot();
+        //     }
+        // });
+        
+        // // Автофокус на поле ввода
+        // searchInput.focus();
+        
+        // // Инициализация при загрузке
+        // window.addEventListener('load', initWebApp);
+        const input = document.getElementById('searchInput');
+        const button = document.getElementById('searchBtn');
+
+        // Обрабатываем клик по кнопке
+        button.addEventListener('click', () => {
+        const query = input.value.trim();
+
+        if (!query) {
+                return;
             }
+
+        // Пример: отправляем запрос на сервер
+        fetch("http://localhost:5171/api/webapp/receive", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ searchQuery: query })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Ответ от сервера:", data);
+
+            // Переход на results.html только если сервер успешно принял данные
+            if (data.success) {
+                window.location.href = `results.html?query=${encodeURIComponent(query)}`;
+            } else {
+                alert("Сервер ответил ошибкой: " + (data.message || "Неизвестная ошибка"));
+            }
+        })
+        .catch(err => console.error("Ошибка:", err));
         });
-        
-        // Автофокус на поле ввода
-        searchInput.focus();
-        
-        // Инициализация при загрузке
-        window.addEventListener('load', initWebApp);
     </script>
 </body>
 </html>

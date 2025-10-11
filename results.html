@@ -398,6 +398,36 @@
       overlay.classList.remove('visible');
       toggleBtn.style.display = 'inline-block';
     });
+    const input = document.getElementById('searchInput');
+        const button = document.getElementById('searchBtn');
+
+        // Обрабатываем клик по кнопке
+        button.addEventListener('click', () => {
+        const query = input.value.trim();
+
+        if (!query) {
+                return;
+            }
+
+        // Пример: отправляем запрос на сервер
+        fetch("http://localhost:5171/api/webapp/receive", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ searchQuery: query })
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Ответ от сервера:", data);
+
+            // Переход на results.html только если сервер успешно принял данные
+            if (data.success) {
+                window.location.href = `results.html?query=${encodeURIComponent(query)}`;
+            } else {
+                alert("Сервер ответил ошибкой: " + (data.message || "Неизвестная ошибка"));
+            }
+        })
+        .catch(err => console.error("Ошибка:", err));
+        });
   </script>
 </body>
 </html>
