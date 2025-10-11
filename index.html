@@ -123,21 +123,64 @@
   <script>
     // Получаем объект Telegram WebApp, если доступен
     const tg = window.Telegram?.WebApp;
-    tg?.ready(); // уведомляем Telegram, что WebApp готов
+    
+    // Инициализация Web App
+    if (tg) {
+      tg.ready(); // уведомляем Telegram, что WebApp готов
+      tg.expand(); // расширяем приложение на весь экран
+      console.log('Telegram Web App инициализирован');
+    } else {
+      console.log('Telegram Web App недоступен - работаем в обычном браузере');
+    }
 
     document.getElementById('searchBtn').addEventListener('click', () => {
       const query = document.getElementById('searchInput').value.trim();
+      
       if (!query) {
-        if (tg) tg.showAlert('Введите направление для поиска');
-        else alert('Введите направление для поиска');
+        if (tg) {
+          tg.showAlert('Введите направление для поиска');
+        } else {
+          alert('Введите направление для поиска');
+        }
         return;
       }
 
-      // Отправка строки в бот (если открыт в Telegram)
-      if (tg) tg.sendData(query);
+      console.log('Отправляем запрос:', query);
+
+      // Отправка данных в бот (если открыт в Telegram)
+      if (tg) {
+        try {
+          // Создаем структурированные данные
+          const data = {
+            searchQuery: query,
+            timestamp: new Date().toISOString(),
+            source: 'mini_app'
+          };
+          
+          // Отправляем JSON данные
+          tg.sendData(JSON.stringify(data));
+          console.log('Данные отправлены боту:', data);
+          
+          // Показываем подтверждение пользователю
+          tg.showAlert('Запрос отправлен боту!');
+          
+        } catch (error) {
+          console.error('Ошибка при отправке данных:', error);
+          tg.showAlert('Ошибка при отправке данных');
+        }
+      } else {
+        console.log('Telegram Web App недоступен - данные не отправлены');
+      }
 
       // Переход на results.html с параметром query
       window.location.href = `results.html?query=${encodeURIComponent(query)}`;
+    });
+
+    // Обработка нажатия Enter в поле ввода
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('searchBtn').click();
+      }
     });
   </script>
 </body>
