@@ -222,6 +222,14 @@
             if (tg) {
                 tg.ready(); // уведомляем Telegram, что WebApp готов
                 tg.expand(); // расширяем приложение на весь экран
+                
+                // Отключаем автоматическое закрытие
+                tg.enableClosingConfirmation();
+                
+                // Настраиваем кнопку закрытия
+                tg.MainButton.hide();
+                tg.BackButton.hide();
+                
                 console.log('Telegram Web App инициализирован');
             } else {
                 console.log('Telegram Web App недоступен - работаем в обычном браузере');
@@ -256,15 +264,22 @@
                 
                 console.log('Отправляем данные:', data);
                 
-                // Отправляем JSON данные
-                tg.sendData(JSON.stringify(data));
-                console.log('Данные отправлены боту успешно');
+                // Сохраняем данные в localStorage
+                localStorage.setItem('searchQuery', query);
+                localStorage.setItem('searchData', JSON.stringify(data));
+                
+                // Отправляем JSON данные (если доступно)
+                if (tg && typeof tg.sendData === 'function') {
+                    tg.sendData(JSON.stringify(data));
+                    console.log('Данные отправлены боту успешно');
+                }
                 
                 // Показываем подтверждение пользователю
                 showStatus('✅ Запрос успешно отправлен боту!', 'success');
                 
                 // Переход на вторую страничку через небольшую задержку
                 setTimeout(() => {
+                    // Переходим на вторую страничку
                     window.location.href = `results.html?query=${encodeURIComponent(query)}`;
                 }, 1500);
                 
