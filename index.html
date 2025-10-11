@@ -204,7 +204,7 @@
             }
 
             // Блокируем кнопку
-            setButtonState(true, '⏳ Отправка...');
+            setButtonState(true, '⏳ Поиск...');
 
             try {
                 // Создаем структурированные данные
@@ -220,23 +220,18 @@
                 localStorage.setItem('searchQuery', query);
                 localStorage.setItem('searchData', JSON.stringify(data));
                 
-                // Отправляем данные боту с небольшой задержкой
-                setTimeout(() => {
-                    if (tg && typeof tg.sendData === 'function') {
-                        try {
-                            tg.sendData(JSON.stringify(data));
-                            console.log('Данные отправлены боту успешно');
-                        } catch (sendError) {
-                            console.error('Ошибка при отправке данных боту:', sendError);
-                        }
+                // Отправляем данные боту
+                if (tg && typeof tg.sendData === 'function') {
+                    try {
+                        tg.sendData(JSON.stringify(data));
+                        console.log('Данные отправлены боту успешно');
+                    } catch (sendError) {
+                        console.error('Ошибка при отправке данных боту:', sendError);
                     }
-                }, 500);
+                }
                 
-                // Переход на вторую страничку через задержку
-                setTimeout(() => {
-                    // Переходим на вторую страничку
-                    window.location.href = `results.html?query=${encodeURIComponent(query)}`;
-                }, 1000);
+                // Переход на вторую страничку
+                window.location.href = `results.html?query=${encodeURIComponent(query)}`;
                 
             } catch (error) {
                 console.error('Ошибка при обработке:', error);
