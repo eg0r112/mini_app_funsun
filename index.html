@@ -64,6 +64,13 @@
             outline: none;
             color: #fff;
             background: transparent;
+            box-shadow: none;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            box-shadow: none;
+            border: none;
         }
 
         .search-container button {
@@ -227,9 +234,6 @@
             
             if (!query) {
                 showStatus('❌ Введите направление для поиска', 'error');
-                if (tg) {
-                    tg.showAlert('Введите направление для поиска');
-                }
                 return;
             }
 
@@ -258,7 +262,6 @@
                 
                 // Показываем подтверждение пользователю
                 showStatus('✅ Запрос успешно отправлен боту!', 'success');
-                tg.showAlert('Запрос отправлен боту!');
                 
                 // Переход на вторую страничку через небольшую задержку
                 setTimeout(() => {
@@ -268,7 +271,6 @@
             } catch (error) {
                 console.error('Ошибка при отправке:', error);
                 showStatus('❌ Ошибка при отправке данных', 'error');
-                tg.showAlert('Ошибка при отправке данных: ' + error.message);
                 
                 // Разблокируем кнопку при ошибке
                 setButtonState(false, 'Найти');
