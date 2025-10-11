@@ -36,24 +36,16 @@
             display: none;
         }
 
-        .container {
-            max-width: 500px;
-            width: 90%;
+        .search-container {
+            display: flex;
             background-color: #1b1b1b;
-            border-radius: 20px;
-            padding: 2rem;
+            border-radius: 50px;
+            overflow: hidden;
+            width: 90%;
+            max-width: 600px;
             box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
             position: relative;
             z-index: 1;
-        }
-
-        .search-container {
-            display: flex;
-            background-color: #2a2a2a;
-            border-radius: 50px;
-            overflow: hidden;
-            margin-bottom: 1rem;
-            box-shadow: 0 0 10px rgba(255, 204, 0, 0.1);
         }
 
         .search-container input {
@@ -64,13 +56,6 @@
             outline: none;
             color: #fff;
             background: transparent;
-            box-shadow: none;
-        }
-
-        .search-container input:focus {
-            outline: none;
-            box-shadow: none;
-            border: none;
         }
 
         .search-container button {
@@ -84,14 +69,7 @@
             transition: background-color 0.3s;
         }
 
-        .search-container button:hover { 
-            background-color: #ffdb4d; 
-        }
-
-        .search-container button:disabled {
-            background-color: #666;
-            cursor: not-allowed;
-        }
+        .search-container button:hover { background-color: #ffdb4d; }
 
 
 
@@ -123,26 +101,21 @@
                 z-index: 0;
             }
             h1 { font-size: 1.8rem; margin-top: 2rem; }
-            .container {
-                position: relative;
-                width: 100%;
-                margin-top: 2rem;
-                padding: 1.5rem;
-            }
             .search-container {
                 flex-direction: column;
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90%;
+                max-width: 400px;
+                background-color: #222;
+                padding: 1rem;
+                border-radius: 25px;
+                box-shadow: 0 4px 20px rgba(255, 204, 0, 0.3);
             }
-            .search-container input, 
-            .search-container button { 
-                width: 100%; 
-                font-size: 1.1rem; 
-                margin: 0.3rem 0; 
-                border-radius: 12px; 
-            }
-            .search-container button { 
-                border-top: 1px solid #333; 
-                padding: 1rem; 
-            }
+            .search-container input, .search-container button { width: 100%; font-size: 1.1rem; margin: 0.3rem 0; border-radius: 12px; }
+            .search-container button { border-top: 1px solid #333; padding: 1rem; }
         }
 
         @media (min-width: 601px) {
@@ -155,12 +128,10 @@
     <h1>FUN&SUN — Поиск билетов</h1>
     <h2>Найдите свой идеальный отпуск!</h2>
 
-    <div class="container">
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Куда вы хотите отправиться?" />
-            <button id="searchBtn">Найти</button>
-        </div>
-        
+    <!-- Только один блок поиска -->
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Куда вы хотите отправиться?" />
+        <button id="searchBtn">Найти</button>
     </div>
 
     <script>
