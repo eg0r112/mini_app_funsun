@@ -104,18 +104,21 @@
   </div>
 
   <script>
-    // Получаем объект Telegram WebApp
     const tg = window.Telegram.WebApp;
-
+  
+    // Ждем, пока WebApp полностью инициализируется
+    tg.ready();
+  
     document.getElementById('searchBtn').addEventListener('click', () => {
       const query = document.getElementById('searchInput').value.trim();
       if (!query) {
-        alert('Введите направление для поиска');
+        tg.showAlert('Введите направление для поиска'); // Telegram-оповещение
         return;
       }
-
-      // Открываем results.html внутри Web App с параметром query
+  
       const url = `https://eg0r112.github.io/mini_app_funsun/results.html?query=${encodeURIComponent(query)}`;
+  
+      // Открываем ссылку внутри Telegram WebApp
       tg.openLink(url);
     });
   </script>
