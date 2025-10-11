@@ -104,23 +104,33 @@
   </div>
 
   <script>
-    const tg = window.Telegram.WebApp;
+    // Проверяем, что WebApp объект доступен
+    const tg = window.Telegram?.WebApp;
   
-    // Ждем, пока WebApp полностью инициализируется
-    tg.ready();
+    if (tg) {
+      tg.ready(); // уведомляем Telegram, что WebApp готов
   
-    document.getElementById('searchBtn').addEventListener('click', () => {
-      const query = document.getElementById('searchInput').value.trim();
-      if (!query) {
-        tg.showAlert('Введите направление для поиска'); // Telegram-оповещение
-        return;
-      }
+      document.getElementById('searchBtn').addEventListener('click', () => {
+        const query = document.getElementById('searchInput').value.trim();
+        if (!query) {
+          tg.showAlert('Введите направление для поиска');
+          return;
+        }
   
-      const url = `https://eg0r112.github.io/mini_app_funsun/results.html?query=${encodeURIComponent(query)}`;
-  
-      // Открываем ссылку внутри Telegram WebApp
-      tg.openLink(url);
-    });
+        const url = `https://eg0r112.github.io/mini_app_funsun/results.html?query=${encodeURIComponent(query)}`;
+        tg.openLink(url); // открывает страницу внутри Telegram
+      });
+    } else {
+      // В обычном браузере fallback
+      document.getElementById('searchBtn').addEventListener('click', () => {
+        const query = document.getElementById('searchInput').value.trim();
+        if (!query) {
+          alert('Введите направление для поиска');
+          return;
+        }
+        window.location.href = `results.html?query=${encodeURIComponent(query)}`;
+      });
+    }
   </script>
 </body>
 </html>
