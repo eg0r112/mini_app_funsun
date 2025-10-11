@@ -185,6 +185,14 @@
                 tg.MainButton.hide();
                 tg.BackButton.hide();
                 
+                // Отключаем автоматическое закрытие
+                tg.enableClosingConfirmation();
+                
+                // Переопределяем поведение закрытия
+                tg.onEvent('viewportChanged', function() {
+                    console.log('Viewport changed');
+                });
+                
                 console.log('Telegram Web App инициализирован');
             } else {
                 console.log('Telegram Web App недоступен - работаем в обычном браузере');
@@ -220,18 +228,31 @@
                 localStorage.setItem('searchQuery', query);
                 localStorage.setItem('searchData', JSON.stringify(data));
                 
-                // Отправляем данные боту
-                if (tg && typeof tg.sendData === 'function') {
-                    try {
-                        tg.sendData(JSON.stringify(data));
-                        console.log('Данные отправлены боту успешно');
-                    } catch (sendError) {
-                        console.error('Ошибка при отправке данных боту:', sendError);
+                // Отправляем данные боту с задержкой
+                setTimeout(() => {
+                    if (tg && typeof tg.sendData === 'function') {
+                        try {
+                            // Попробуем отправить через postMessage
+                            if (window.parent && window.parent !== window) {
+                                window.parent.postMessage({
+                                    type: 'telegram-webapp-data',
+                                    data: JSON.stringify(data)
+                                }, '*');
+                            }
+                            
+                            // Также попробуем стандартный способ
+                            tg.sendData(JSON.stringify(data));
+                            console.log('Данные отправлены боту успешно');
+                        } catch (sendError) {
+                            console.error('Ошибка при отправке данных боту:', sendError);
+                        }
                     }
-                }
+                }, 100);
                 
-                // Переход на вторую страничку
-                window.location.href = `results.html?query=${encodeURIComponent(query)}`;
+                // Переход на вторую страничку с задержкой
+                setTimeout(() => {
+                    window.location.href = `results.html?query=${encodeURIComponent(query)}`;
+                }, 500);
                 
             } catch (error) {
                 console.error('Ошибка при обработке:', error);
