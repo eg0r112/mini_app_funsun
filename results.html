@@ -401,6 +401,9 @@
     const input = document.getElementById('searchInput');
         const button = document.getElementById('searchBtn');
 
+        const aiData = JSON.parse(sessionStorage.getItem("aiResponse") || "{}");
+        console.log("???????????????????????????????????????????????????????????\n",JSON.stringify(aiData));
+
         // Обрабатываем клик по кнопке
         button.addEventListener('click', () => {
         const query = input.value.trim();
@@ -408,13 +411,15 @@
         if (!query) {
                 return;
             }
+          button.textContent = "Поиск 🔍...";
+          button.disabled = true; // отключаем кнопку, пока идёт запрос
 
             const aiReq = {
             Request: query,   // строка запроса
             Response: ""      // пока пустая, сервер заполнит
         };
 
-        fetch("http://localhost:5171/api/AI_req/request", {
+        fetch("http://localhost:5171/api/AI_req_Сontroller/request", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(aiReq)

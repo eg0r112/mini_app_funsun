@@ -266,38 +266,43 @@
         button.addEventListener('click', () => {
         const query = input.value.trim();
 
+
         if (!query) {
                 return;
             }
+        button.textContent = "Поиск 🔍...";
+        button.disabled = true; // отключаем кнопку, пока идёт запрос
 
         // Пример: отправляем запрос на сервер
         const aiReq = {
-            Request: query,   // строка запроса
-            Response: ""      // пока пустая, сервер заполнит
+            request: query,   // строка запроса
+            response: "string"      // сервер заполнит
         };
 
-        fetch("http://localhost:5171/api/AI_req/request", {
+        fetch("http://localhost:5171/api/AI_req_Сontroller/request", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(aiReq)
         })
-        .then(res => res.json())
-        .then(data => {
-            console.log("Ответ от сервера:", data);
+        .then(async res => {
+            const text = await res.text(); // читаем как текст
+            // console.log("Raw response:", text);
 
-            // Если сервер вернул строку ответа нейросети
-            if (data.Response) {
-                console.log("AI Response:", data.Response);
+            let data;
+            try {
+                data = JSON.parse(text); // парсим JSON
+            } catch (err) {
+                console.error("Ошибка парсинга JSON:", err);
+                alert("Сервер вернул невалидный JSON. Смотрите консоль.");
+                return;
             }
-
-            // Переход на results.html только если success = true
-            if (data.success) {
-                window.location.href = `results.html?query=${encodeURIComponent(query)}`;
-            } else {
-                alert("Сервер ответил ошибкой: " + (data.message || "Неизвестная ошибка"));
-            }
+            sessionStorage.setItem("aiResponse", JSON.stringify(data));
+            if (data.Response) console.log("AI Response:", data.Response);
+            if (data.success) window.location.href = `results.html?query=${encodeURIComponent(query)}`;
+            else alert("Ошибка от сервера: " + (data.message || "Неизвестная ошибка"));
+            // console.log("Parsed JSON:", data);
         })
-        .catch(err => console.error("Ошибка:", err));
+        .catch(err => console.error("Ошибка fetch:", err));
         });
     </script>
 </body>
