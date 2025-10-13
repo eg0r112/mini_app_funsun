@@ -304,8 +304,8 @@
       <button id="searchBtn">Найти</button>
     </div>
 
-    <div class="results">
-      <div class="card">
+    <div id="resultsContainer" class="results">
+      <!-- <div class="card">
         <img src="https://cdn-ya.readytotrip.com/get-altay/10768923/2a0000018a5da39f47d06beac164769c80c6/XXL" alt="Отель 1">
         <div class="card-content">
           <h3>Отель Paradise</h3>
@@ -360,20 +360,20 @@
           </div>
           <div class="dates">20–27 октября | 7 ночей</div>
         </div>
-      </div>
+      </div> -->
     </div>
   </main>
 
   <script>
     // Переход при новом поиске
-    document.getElementById('searchBtn').addEventListener('click', () => {
-      const query = document.getElementById('searchInput').value.trim();
-      if (query) {
-        window.location.href = `results.html?query=${encodeURIComponent(query)}`;
-      } else {
-        alert('Введите направление для поиска');
-      }
-    });
+    // document.getElementById('searchBtn').addEventListener('click', () => {
+    //   const query = document.getElementById('searchInput').value.trim();
+    //   if (query) {
+    //     window.location.href = `results.html?query=${encodeURIComponent(query)}`;
+    //   } else {
+    //     alert('Введите направление для поиска');
+    //   }
+    // });
 
     // Подстановка запроса из первой страницы
     const params = new URLSearchParams(window.location.search);
@@ -404,6 +404,86 @@
         const aiData = JSON.parse(sessionStorage.getItem("aiResponse") || "{}");
         console.log("???????????????????????????????????????????????????????????\n",JSON.stringify(aiData));
 
+
+        // Проверяем наличие туров
+        if (aiData.tour_json) {
+          let tours;
+          try {
+            tours = JSON.parse(aiData.tour_json); // массив туров
+          } catch (err) {
+            console.error("Ошибка парсинга tour_json:", err);
+            tours = [];
+          }
+
+          if (tours && typeof tours === "object" && !Array.isArray(tours) && "message" in tours && tours.message=="Туры не найдены по указанным параметрам") {
+            console.log(tours.message);
+          }
+          else
+          {
+
+            const resultsContainer = document.getElementById("resultsContainer");
+
+            function generateStars(count) {
+              const fullStars = "★".repeat(count);
+              const emptyStars = "☆".repeat(5 - count);
+              return fullStars + emptyStars;
+            }
+
+            tours.forEach((tour, index) => {
+              const card = document.createElement("div");
+              card.className = "card";
+
+              // Переход при клике на карточку в том же окне
+              card.addEventListener("click", () => {
+                window.location.href =
+                  "https://fstravel.com/hotel/europe/turkey/side/cholakli/funsun-smart-hane-sun?withFly=true&departureCityId=274286&arrivalCountryId=18803&minStartDate=2025-10-27&maxStartDate=2025-10-27&minNightsCount=7&maxNightsCount=7&adults=2&isInstantConfirmation=true&priceId=0x430A000335B50000042F6E000049730000004E00000000F7C4DFFDB3830000027CE89E07000BE11B0000A7F20000000E000004FE000000000000000000000072010B913AB38A0000070000000000AF52D00000000302020000636363B3830000B38A000002000000001E00000000000000000000000000000000000000000000000000000000&flightTypes=charter";
+              });
+
+              card.style.cursor = "pointer";
+
+              const img = document.createElement("img");
+              img.src =
+                "https://cdn-ya.readytotrip.com/get-altay/10768923/2a0000018a5da39f47d06beac164769c80c6/XXL";
+              img.alt = tour.NameHotel || `Отель ${index + 1}`;
+
+              const content = document.createElement("div");
+              content.className = "card-content";
+
+              const h3 = document.createElement("h3");
+              h3.textContent = tour.NameHotel || "Отель";
+
+              const stars = document.createElement("div");
+              stars.className = "stars";
+              stars.textContent = generateStars(tour.Star || 0);
+
+              const location = document.createElement("div");
+              location.className = "location";
+              location.textContent = `${tour.CityOut || ""}, ${tour.Country || ""}`;
+
+              const amenities = document.createElement("div");
+              amenities.className = "amenities";
+              amenities.innerHTML =
+                "<span>📶 Wi-Fi</span><span>🍳 Завтрак</span><span>🏊 Бассейн</span>";
+
+              const priceDiv = document.createElement("div");
+              const price = document.createElement("span");
+              price.className = "price";
+              price.textContent = `${tour.Price?.toLocaleString("ru-RU") || "-"} ₽`;
+              priceDiv.appendChild(price);
+
+              const dates = document.createElement("div");
+              dates.className = "dates";
+              dates.textContent = `${tour.StartEnd?.replace("-", " | ")} | ${
+                tour.Duration || "-"
+              } ночей`;
+
+              content.append(h3, stars, location, amenities, priceDiv, dates);
+              card.append(img, content);
+              resultsContainer.appendChild(card);
+            });
+          }
+        }
+
         // Обрабатываем клик по кнопке
         button.addEventListener('click', () => {
         const query = input.value.trim();
@@ -414,9 +494,9 @@
           button.textContent = "Поиск 🔍...";
           button.disabled = true; // отключаем кнопку, пока идёт запрос
 
-            const aiReq = {
-            Request: query,   // строка запроса
-            Response: ""      // пока пустая, сервер заполнит
+          const aiReq = {
+            request: query,   // строка запроса
+            response: "string"      // сервер заполнит
         };
 
         fetch("http://localhost:5171/api/AI_req_Сontroller/request", {
@@ -424,23 +504,25 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(aiReq)
         })
-        .then(res => res.json())
-        .then(data => {
-            console.log("Ответ от сервера:", data);
+        .then(async res => {
+            const text = await res.text(); // читаем как текст
+            // console.log("Raw response:", text);
 
-            // Если сервер вернул строку ответа нейросети
-            if (data.Response) {
-                console.log("AI Response:", data.Response);
+            let data;
+            try {
+                data = JSON.parse(text); // парсим JSON
+            } catch (err) {
+                console.error("Ошибка парсинга JSON:", err);
+                alert("Сервер вернул невалидный JSON. Смотрите консоль.");
+                return;
             }
-
-            // Переход на results.html только если success = true
-            if (data.success) {
-                window.location.href = `results.html?query=${encodeURIComponent(query)}`;
-            } else {
-                alert("Сервер ответил ошибкой: " + (data.message || "Неизвестная ошибка"));
-            }
+            sessionStorage.setItem("aiResponse", JSON.stringify(data));
+            if (data.Response) console.log("AI Response:", data.Response);
+            if (data.success) window.location.href = `results.html?query=${encodeURIComponent(query)}`;
+            else alert("Ошибка от сервера: " + (data.message || "Неизвестная ошибка"));
+            // console.log("Parsed JSON:", data);
         })
-        .catch(err => console.error("Ошибка:", err));
+        .catch(err => console.error("Ошибка fetch:", err));
         });
   </script>
 </body>
