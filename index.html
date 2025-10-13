@@ -271,16 +271,26 @@
             }
 
         // Пример: отправляем запрос на сервер
-        fetch("http://localhost:5171/api/webapp/receive", {
+        const aiReq = {
+            Request: query,   // строка запроса
+            Response: ""      // пока пустая, сервер заполнит
+        };
+
+        fetch("http://localhost:5171/api/AI_req/request", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ searchQuery: query })
+            body: JSON.stringify(aiReq)
         })
         .then(res => res.json())
         .then(data => {
             console.log("Ответ от сервера:", data);
 
-            // Переход на results.html только если сервер успешно принял данные
+            // Если сервер вернул строку ответа нейросети
+            if (data.Response) {
+                console.log("AI Response:", data.Response);
+            }
+
+            // Переход на results.html только если success = true
             if (data.success) {
                 window.location.href = `results.html?query=${encodeURIComponent(query)}`;
             } else {
