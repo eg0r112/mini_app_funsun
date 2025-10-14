@@ -224,6 +224,302 @@
     .overlay.visible {
       display: block;
     }
+    .price-range {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+
+    .price-values {
+      display: flex;
+      justify-content: space-between;
+      color: #ffcc00;
+      font-weight: bold;
+    }
+
+    input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #1b1b1b;
+  border: 2px solid #555;
+  border-radius: 50%; /* делаем его круглым */
+  width: 18px;
+  height: 18px;
+  top: 3px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Наведение */
+input[type="checkbox"]:hover {
+  border-color: #ffcc00;
+}
+
+/* Активное состояние (нажатие) */
+input[type="checkbox"]:active {
+  transform: scale(0.9);
+}
+
+/* Когда чекбокс выбран */
+input[type="checkbox"]:checked {
+  background-color: #ffcc00;
+  border-color: #ffcc00;
+}
+
+/* Галочка */
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 8px;
+  height: 8px;
+  background: #000;
+  border-radius: 50%; /* чтобы галочка была круглая (точка) */
+}
+
+    .price-range {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.price-values {
+  display: flex;
+  justify-content: space-between;
+  color: #ffcc00;
+  font-weight: bold;
+}
+
+/* Контейнер с треком и двумя ползунками */
+.range-container {
+  position: relative;
+  width: 100%;
+  height: 30px;
+}
+
+/* Общие стили для ползунков */
+.range-container input[type="range"] {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  background: none;
+  pointer-events: none; /* чтобы они не мешали друг другу */
+}
+
+/* Чтобы активный ползунок был поверх другого */
+.range-container input[type="range"].active {
+  z-index: 3;
+  pointer-events: all;
+}
+
+/* Трек */
+.range-container input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  background: #333;
+  border-radius: 5px;
+}
+.range-container input[type="range"]::-moz-range-track {
+  height: 6px;
+  background: #333;
+  border-radius: 5px;
+}
+
+/* Ручка */
+.range-container input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #ffcc00;
+  cursor: pointer;
+  pointer-events: all;
+  position: relative;
+  bottom: 5px;
+  z-index: 4;
+}
+.range-container input[type="range"]::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #ffcc00;
+  cursor: pointer;
+  position: relative;
+  z-index: 4;
+}
+
+/* Активный диапазон (жёлтая полоса между ручками) */
+.range-track {
+  position: absolute;
+  height: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #ffcc00;
+  border-radius: 5px;
+  z-index: 1;
+}
+
+
+.range-sliders input[type="range"]:focus::-webkit-slider-runnable-track {
+  background: #555;
+}
+
+.star-rating {
+  display: flex;
+  gap: 5px;
+  font-size: 1.4rem;
+  color: #555; /* неактивные звёзды */
+  cursor: pointer;
+  transition: color 0.3s ease;
+  user-select: none;
+}
+
+.star-rating span {
+  transition: transform 0.2s, color 0.2s;
+}
+
+.star-rating span:hover {
+  transform: scale(1.2);
+}
+
+/* Активные звёзды (выбранные) */
+.star-rating .active {
+  color: #ffcc00;
+}
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 5px;
+}
+
+.counter button {
+  width: 30px;
+  height: 30px;
+  background-color: #ffcc00;
+  color: #000;
+  border: none;
+  border-radius: 50%;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.counter button:hover {
+  background-color: #ffdb4d;
+}
+
+.counter input {
+  width: 50px;
+  text-align: center;
+  border: 1px solid #555;
+  border-radius: 5px;
+  background-color: #1b1b1b;
+  color: #fff;
+  font-size: 1rem;
+  padding: 4px;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.counter button {
+  width: 14px;
+  height: 14px;
+  font-size: 16px;
+  padding: 0;
+  border-radius: 50%;
+  background-color: #ffcc00;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  line-height: 14px;
+  text-align: center;
+}
+
+/* поднимаем только символ внутри кнопки */
+.counter button::before {
+  content: attr(data-symbol);
+  display: inline-block;
+  transform: translateY(-2px); /* смещаем текст вверх */
+}
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+.sort-options {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.custom-radio {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #fff;
+  font-size: 0.95rem;
+  position: relative;
+  user-select: none;
+}
+
+.custom-radio input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.custom-radio span {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #555;
+  border-radius: 50%;
+  margin-right: 10px;
+  display: inline-block;
+  position: relative;
+  transition: all 0.3s;
+}
+
+/* активное состояние (когда выбрано) */
+.custom-radio input:checked + span {
+  border-color: #ffcc00;
+  background-color: #ffcc00;
+}
+
+/* внутренний кружок */
+.custom-radio span::after {
+  content: "";
+  position: absolute;
+  display: none;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: #000;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.custom-radio input:checked + span::after {
+  display: block;
+}
+#applySortBtn {
+  margin-top: 10px;
+  width: 100%;
+  text-align: center;
+}
 
     /* Мобильная адаптация */
     @media (max-width: 768px) {
@@ -279,14 +575,98 @@
 <body>
   <!-- Панель настроек -->
   <aside class="settings" id="settingsPanel">
-    <h2>Настройки</h2>
+    <h2>Фильтры</h2>
     <ul>
-      <li>Сортировать по цене</li>
-      <li>Сортировать по дате</li>
-      <li>Прямые рейсы</li>
-      <li>С пересадками</li>
-      <li>Фильтр авиакомпаний</li>
+      <li>
+        <label>
+          <input type="checkbox" id="directFlights">
+          Прямые рейсы
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" id="withTransfers">
+          С пересадками
+        </label>
+      </li>
+      <li>
+        <label for="priceRange">Диапазон цены</label>
+      </li>
+      <li>
+        <div class="price-range">
+          <div class="price-values">
+            <span id="priceMinDisplay">0 ₽</span> —
+            <span id="priceMaxDisplay">100000 ₽</span>
+          </div>
+          <div class="range-container">
+            <div class="range-track" id="priceTrack"></div>
+            <input type="range" id="priceMin" min="0" max="100000" value="0" step="500">
+            <input type="range" id="priceMax" min="0" max="300000" value="300000" step="500">
+          </div>
+        </div>
+      </li>
+      <li>
+        <label for="starRating">Рейтинг</label>
+        <div class="star-rating" id="starRating">
+          <span data-value="1">★</span>
+          <span data-value="2">★</span>
+          <span data-value="3">★</span>
+          <span data-value="4">★</span>
+          <span data-value="5">★</span>
+        </div>
+      </li>
+      <li>
+        <label>Взрослые</label>
+        <div class="counter">
+          <button class="minus" data-symbol="-"></button>
+          <input type="number" min="1" max="10" value="2" class="counter-input">
+          <button class="plus" data-symbol="+"></button>
+        </div>
+      </li>
+      
+      <li>
+        <label>Дети</label>
+        <div class="counter">
+          <button class="minus" data-symbol="-"></button>
+          <input type="number" min="0" max="10" value="0" class="counter-input">
+          <button class="plus" data-symbol="+"></button>
+        </div>
+      </li>
     </ul>
+
+    <button class="apply-btn" id="applySettings">Применить</button>
+    <h2>Сортировка</h2>
+    <ul class="sort-options">
+      <li>
+        <label class="custom-radio">
+          <input type="radio" name="sort" value="priceAsc">
+          <span></span>
+          по возрастанию цены
+        </label>
+      </li>
+      <li>
+        <label class="custom-radio">
+          <input type="radio" name="sort" value="priceDesc">
+          <span></span>
+          по убыванию цены
+        </label>
+      </li>
+      <li>
+        <label class="custom-radio">
+          <input type="radio" name="sort" value="starAsc">
+          <span></span>
+          по возрастанию звёзд
+        </label>
+      </li>
+      <li>
+        <label class="custom-radio">
+          <input type="radio" name="sort" value="starDesc">
+          <span></span>
+          по убыванию звёзд
+        </label>
+      </li>
+    </ul>
+    <button id="applySortBtn" class="toggle-settings">Применить сортировку</button>
   </aside>
 
   <!-- Затемнение -->
@@ -365,6 +745,123 @@
   </main>
 
   <script>
+    document.getElementById('applySettings').addEventListener('click', () => {
+      const sortValue = document.querySelector('input[name="sort"]:checked').value;
+      const direct = document.getElementById('directFlights').checked;
+      const transfers = document.getElementById('withTransfers').checked;
+      const airline = document.getElementById('airlineFilter').value;
+
+      const settings = {
+        sortBy: sortValue,
+        directFlights: direct,
+        withTransfers: transfers,
+        airlineFilter: airline,
+      };
+
+      console.log('Настройки применены:', settings);
+
+      alert(
+        `✅ Настройки применены:\n\n` +
+        `Сортировка: ${sortValue === 'price' ? 'по цене' : 'по дате'}\n` +
+        `Прямые рейсы: ${direct ? 'да' : 'нет'}\n` +
+        `С пересадками: ${transfers ? 'да' : 'нет'}\n` +
+        `Авиакомпания: ${airline}`
+      );
+    });
+    const priceMin = document.getElementById('priceMin');
+    const priceMax = document.getElementById('priceMax');
+    const priceMinDisplay = document.getElementById('priceMinDisplay');
+    const priceMaxDisplay = document.getElementById('priceMaxDisplay');
+    const minGap = 1000; // минимальная разница между значениями
+
+    function updatePriceDisplays() {
+      let minVal = parseInt(priceMin.value);
+      let maxVal = parseInt(priceMax.value);
+
+      if (maxVal - minVal < minGap) {
+        if (event.target === priceMin) {
+          priceMin.value = maxVal - minGap;
+          minVal = priceMin.value;
+        } else {
+          priceMax.value = parseInt(priceMin.value) + minGap;
+          maxVal = priceMax.value;
+        }
+      }
+
+      priceMinDisplay.textContent = `${Number(minVal).toLocaleString('ru-RU')} ₽`;
+      priceMaxDisplay.textContent = `${Number(maxVal).toLocaleString('ru-RU')} ₽`;
+    }
+
+    priceMin.addEventListener('input', updatePriceDisplays);
+    priceMax.addEventListener('input', updatePriceDisplays);
+    updatePriceDisplays();
+    const stars = document.querySelectorAll('#starRating span');
+    let selectedRating = 0;
+
+    stars.forEach(star => {
+      star.addEventListener('click', () => {
+        selectedRating = parseInt(star.getAttribute('data-value'));
+        updateStars();
+      });
+
+      star.addEventListener('mouseover', () => {
+        const hoverValue = parseInt(star.getAttribute('data-value'));
+        highlightStars(hoverValue);
+      });
+
+      star.addEventListener('mouseleave', () => {
+        updateStars();
+      });
+    });
+
+    function updateStars() {
+      stars.forEach(star => {
+        star.classList.toggle('active', parseInt(star.getAttribute('data-value')) <= selectedRating);
+      });
+    }
+
+    function highlightStars(value) {
+      stars.forEach(star => {
+        star.classList.toggle('active', parseInt(star.getAttribute('data-value')) <= value);
+      });
+    }
+    document.querySelectorAll(".counter").forEach(counter => {
+      const input = counter.querySelector(".counter-input");
+      const btnMinus = counter.querySelector(".minus");
+      const btnPlus = counter.querySelector(".plus");
+      const min = parseInt(input.min);
+      const max = parseInt(input.max);
+
+      btnMinus.addEventListener("click", () => {
+        let value = parseInt(input.value) || min;
+        if (value > min) {
+          input.value = value - 1;
+        }
+      });
+
+      btnPlus.addEventListener("click", () => {
+        let value = parseInt(input.value) || min;
+        if (value < max) {
+          input.value = value + 1;
+        }
+      });
+
+      // Ввод вручную
+      input.addEventListener("input", () => {
+        let value = parseInt(input.value);
+        if (isNaN(value)) return; // разрешаем полностью стереть поле
+        if (value < min) value = min;
+        if (value > max) value = max;
+        input.value = value;
+      });
+
+  // Событие при уходе из поля (blur)
+  input.addEventListener("blur", () => {
+    if (input.value === "" || isNaN(parseInt(input.value))) {
+      input.value = min; // ставим минимальное значение
+    }
+  });
+});
     // Переход при новом поиске
     // document.getElementById('searchBtn').addEventListener('click', () => {
     //   const query = document.getElementById('searchInput').value.trim();
@@ -407,39 +904,45 @@
 
         // Проверяем наличие туров
         if (aiData.tour_json) {
-          let tours;
-          try {
-            tours = JSON.parse(aiData.tour_json); // массив туров
-          } catch (err) {
-            console.error("Ошибка парсинга tour_json:", err);
-            tours = [];
+        let tours;
+        try {
+          tours = JSON.parse(aiData.tour_json);
+        } catch (err) {
+          console.error("Ошибка парсинга tour_json:", err);
+          tours = [];
+        }
+
+        if (
+          tours &&
+          typeof tours === "object" &&
+          !Array.isArray(tours) &&
+          "message" in tours &&
+          tours.message == "Туры не найдены по указанным параметрам"
+        ) {
+          console.log(tours.message);
+        } else {
+          const resultsContainer = document.getElementById("resultsContainer");
+          let allTours = [...tours]; // сохраняем оригинальные туры
+
+          // Функция генерации звёзд
+          function generateStars(count) {
+            const fullStars = "★".repeat(count);
+            const emptyStars = "☆".repeat(5 - count);
+            return fullStars + emptyStars;
           }
 
-          if (tours && typeof tours === "object" && !Array.isArray(tours) && "message" in tours && tours.message=="Туры не найдены по указанным параметрам") {
-            console.log(tours.message);
-          }
-          else
-          {
-
-            const resultsContainer = document.getElementById("resultsContainer");
-
-            function generateStars(count) {
-              const fullStars = "★".repeat(count);
-              const emptyStars = "☆".repeat(5 - count);
-              return fullStars + emptyStars;
-            }
-
-            tours.forEach((tour, index) => {
+          // Функция отрисовки карточек
+          function renderTours(tourList) {
+            resultsContainer.innerHTML = "";
+            tourList.forEach((tour, index) => {
               const card = document.createElement("div");
               card.className = "card";
+              card.style.cursor = "pointer";
 
-              // Переход при клике на карточку в том же окне
               card.addEventListener("click", () => {
                 window.location.href =
-                  "https://fstravel.com/hotel/europe/turkey/side/cholakli/funsun-smart-hane-sun?withFly=true&departureCityId=274286&arrivalCountryId=18803&minStartDate=2025-10-27&maxStartDate=2025-10-27&minNightsCount=7&maxNightsCount=7&adults=2&isInstantConfirmation=true&priceId=0x430A000335B50000042F6E000049730000004E00000000F7C4DFFDB3830000027CE89E07000BE11B0000A7F20000000E000004FE000000000000000000000072010B913AB38A0000070000000000AF52D00000000302020000636363B3830000B38A000002000000001E00000000000000000000000000000000000000000000000000000000&flightTypes=charter";
+                  "https://fstravel.com/hotel/europe/turkey/side/cholakli/funsun-smart-hane-sun?withFly=true";
               });
-
-              card.style.cursor = "pointer";
 
               const img = document.createElement("img");
               img.src =
@@ -482,7 +985,43 @@
               resultsContainer.appendChild(card);
             });
           }
+
+          // Первичный рендер
+          renderTours(allTours);
+
+          // Сортировка по кнопке "Применить"
+          const applySortBtn = document.getElementById("applySortBtn");
+
+          applySortBtn.addEventListener("click", () => {
+            const selectedRadio = document.querySelector('input[name="sort"]:checked');
+
+            if (!selectedRadio) {
+              alert("Выберите вариант сортировки!");
+              return;
+            }
+
+            const value = selectedRadio.value;
+            let sortedTours = [...allTours];
+
+            switch (value) {
+              case "priceAsc":
+                sortedTours.sort((a, b) => (a.Price || 0) - (b.Price || 0));
+                break;
+              case "priceDesc":
+                sortedTours.sort((a, b) => (b.Price || 0) - (a.Price || 0));
+                break;
+              case "starAsc":
+                sortedTours.sort((a, b) => (a.Star || 0) - (b.Star || 0));
+                break;
+              case "starDesc":
+                sortedTours.sort((a, b) => (b.Star || 0) - (a.Star || 0));
+                break;
+            }
+
+            renderTours(sortedTours);
+          });
         }
+      }
 
         // Обрабатываем клик по кнопке
         button.addEventListener('click', () => {
