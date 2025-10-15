@@ -23,6 +23,15 @@
 
     /* Панель настроек */
     .settings {
+      position: fixed;
+      background-color: #1b1b1b;
+      width: 250px;
+      padding: 1.5rem;
+      border-right: 1px solid #333;
+      transition: transform 0.3s ease;
+      z-index: 200;
+    }
+    .settingss {
       background-color: #1b1b1b;
       width: 250px;
       padding: 1.5rem;
@@ -520,9 +529,67 @@ input[type=number] {
   width: 100%;
   text-align: center;
 }
+.apply-btn {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  height: 40px;
+  padding: 0;
+  border-radius: 25px;          /* плавные края */
+  background-color: #ffcc00;    /* основной жёлтый цвет */
+  color: #000;                  /* текст чёрный */
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 3px 6px rgba(255, 204, 0, 0.4);
+}
 
+.apply-btn:hover {
+  background-color: #ffdb4d;     /* светлее при наведении */
+  transform: translateY(-1px);   /* лёгкий эффект поднятия */
+  box-shadow: 0 5px 10px rgba(255, 204, 0, 0.5);
+}
+
+.apply-btn:active {
+  transform: translateY(0);      /* при нажатии кнопка опускается */
+  box-shadow: 0 2px 4px rgba(255, 204, 0, 0.3);
+}
+#applySortBtn {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  height: 40px;
+  padding: 0;
+  border-radius: 25px;          /* плавные края */
+  background-color: #ffcc00;    /* основной жёлтый цвет */
+  color: #000;                  /* текст чёрный */
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 3px 6px rgba(255, 204, 0, 0.4);
+}
+
+#applySortBtn:hover {
+  background-color: #ffdb4d;     /* светлее при наведении */
+  transform: translateY(-1px);   /* лёгкий эффект поднятия */
+  box-shadow: 0 5px 10px rgba(255, 204, 0, 0.5);
+}
+
+#applySortBtn:active {
+  transform: translateY(0);      /* при нажатии кнопка опускается */
+  box-shadow: 0 2px 4px rgba(255, 204, 0, 0.3);
+}
     /* Мобильная адаптация */
     @media (max-width: 768px) {
+      .settingss{
+        display: none;
+      }
       body {
         flex-direction: column;
       }
@@ -573,22 +640,11 @@ input[type=number] {
   </style>
 </head>
 <body>
+  <aside class="settingss" id="settingsPanell"></aside>
   <!-- Панель настроек -->
   <aside class="settings" id="settingsPanel">
     <h2>Фильтры</h2>
     <ul>
-      <li>
-        <label>
-          <input type="checkbox" id="directFlights">
-          Прямые рейсы
-        </label>
-      </li>
-      <li>
-        <label>
-          <input type="checkbox" id="withTransfers">
-          С пересадками
-        </label>
-      </li>
       <li>
         <label for="priceRange">Диапазон цены</label>
       </li>
@@ -632,6 +688,24 @@ input[type=number] {
           <button class="plus" data-symbol="+"></button>
         </div>
       </li>
+      <li>
+        <label>
+          <input type="checkbox" id="directFlights">
+          Кровати для детей
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" id="Test1">
+          Чекбокс для красоты
+        </label>
+      </li>
+      <li>
+        <label>
+          <input type="checkbox" id="Test">
+          Чекбокс для красоты
+        </label>
+      </li>
     </ul>
 
     <button class="apply-btn" id="applySettings">Применить</button>
@@ -666,7 +740,7 @@ input[type=number] {
         </label>
       </li>
     </ul>
-    <button id="applySortBtn" class="toggle-settings">Применить сортировку</button>
+    <button id="applySortBtn" class="toggle-settings">Применить</button>
   </aside>
 
   <!-- Затемнение -->
