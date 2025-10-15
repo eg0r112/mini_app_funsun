@@ -585,6 +585,48 @@ input[type=number] {
   transform: translateY(0);      /* при нажатии кнопка опускается */
   box-shadow: 0 2px 4px rgba(255, 204, 0, 0.3);
 }
+
+#resetFilters {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #ffcc00;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s; /* убрал transform */
+  user-select: none;
+}
+
+#resetFilters:hover {
+  color: #ffdb4d;
+  /* transform: scale(1.05); <- убрали, чтобы не увеличивался весь контейнер */
+}
+#sbros {
+  display: inline-block; /* добавляем, чтобы transform работал */
+  transition: transform 0.2s;
+}
+
+#resetFilters:hover #sbros {
+  transform: scale(1.05);
+}
+
+.reset-img {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  left: 35px;
+  bottom: 5px;
+  transition: transform 0.2s;
+}
+
+#sbros {
+  position: relative;
+  left: 30px;
+  bottom: 6px;
+}
+#resetFilters:hover .reset-img {
+  transform: rotate(-20deg) scale(1.2) translateX(-2px) translateY(-1px);
+}
     /* Мобильная адаптация */
     @media (max-width: 768px) {
       .settingss{
@@ -636,6 +678,14 @@ input[type=number] {
         width: 100%;
         height: 180px;
       }
+      #loadingGif {
+        position: relative;
+        top: 100px;
+      }
+      #giftxt {
+        position: relative;
+        top: 100px;
+      }
     }
   </style>
 </head>
@@ -643,7 +693,11 @@ input[type=number] {
   <aside class="settingss" id="settingsPanell"></aside>
   <!-- Панель настроек -->
   <aside class="settings" id="settingsPanel">
-    <h2>Фильтры</h2>
+    <div class="reset-container">
+      <span id="resetFilters">
+        <h2>Фильтры</h2><img src="reset-icon2.png" alt="Сброс" class="reset-img"><div id="sbros">Сбросить</div>
+      </span>
+    </div>
     <ul>
       <li>
         <label for="priceRange">Диапазон цены</label>
@@ -656,7 +710,7 @@ input[type=number] {
           </div>
           <div class="range-container">
             <div class="range-track" id="priceTrack"></div>
-            <input type="range" id="priceMin" min="0" max="100000" value="0" step="500">
+            <input type="range" id="priceMin" min="0" max="300000" value="0" step="500">
             <input type="range" id="priceMax" min="0" max="300000" value="300000" step="500">
           </div>
         </div>
@@ -757,6 +811,13 @@ input[type=number] {
       <input type="text" id="searchInput" placeholder="Изменить направление" />
       <button id="searchBtn">Найти</button>
     </div>
+    <!-- <video id="loadingVideo" width="300" height="300" autoplay muted style="display:block;">
+      <source src="sad.webm" type="video/mp4">
+    </video> -->
+    <div id="gif" style="display: none; justify-content: center; align-items: center; width: 100%; height: 100%; flex-direction: column;">
+      <div id="giftxt" style="color: #ffdb4d; font-size: 20px;">Упс, не нашли туры по вашим запросам</div>
+      <img id="loadingGif" src="sad.png" style="display:block; width:300px; height:300px; position: relative; left: -1%;" alt="Загрузка">
+    </div>
 
     <div id="resultsContainer" class="results">
       <!-- <div class="card">
@@ -819,28 +880,88 @@ input[type=number] {
   </main>
 
   <script>
+        let selectedRatings = JSON.parse(sessionStorage.getItem("selectedRatings") || -1);
+        let priceMini = JSON.parse(sessionStorage.getItem("priceMini") || 0);
+        let priceMaxi = JSON.parse(sessionStorage.getItem("priceMaxi") || 300000);
+        let adults = JSON.parse(sessionStorage.getItem("adults") || -1);
+        let children = JSON.parse(sessionStorage.getItem("children") || 0);
+        let hasBabyBeds = JSON.parse(sessionStorage.getItem("hasBabyBeds") || false);
+    const starss = document.querySelectorAll('#starRating span');
+
+    starss.forEach(star => {
+      star.addEventListener('click', () => {
+        const value = parseInt(star.dataset.value, 10);
+
+        // Убираем "active" со всех звёзд
+        starss.forEach(s => s.classList.remove('active'));
+
+        // Добавляем "active" всем звёздам до выбранной включительно
+        starss.forEach(s => {
+          if (parseInt(s.dataset.value, 10) <= value) {
+            s.classList.add('active');
+          }
+        });
+      });
+    });
     document.getElementById('applySettings').addEventListener('click', () => {
-      const sortValue = document.querySelector('input[name="sort"]:checked').value;
-      const direct = document.getElementById('directFlights').checked;
-      const transfers = document.getElementById('withTransfers').checked;
-      const airline = document.getElementById('airlineFilter').value;
+      priceMini = parseInt(document.getElementById('priceMin').value, 10);
+      priceMaxi = parseInt(document.getElementById('priceMax').value, 10);
 
-      const settings = {
-        sortBy: sortValue,
-        directFlights: direct,
-        withTransfers: transfers,
-        airlineFilter: airline,
+      // Получаем рейтинг (нажатую звезду)
+      const activeStars = document.querySelectorAll('#starRating span.active');
+      selectedRatings = activeStars.length > 0
+        ? activeStars[activeStars.length - 1].dataset.value
+        : -1;
+
+      // Получаем количество взрослых и детей
+      const counters = document.querySelectorAll('.counter');
+      adults = parseInt(counters[0].querySelector('.counter-input').value, 10);
+      children = parseInt(counters[1].querySelector('.counter-input').value, 10);
+
+      // Получаем состояние чекбоксов
+      hasBabyBeds = document.getElementById('directFlights').checked;
+      const test1 = document.getElementById('Test1').checked;
+      const test2 = document.getElementById('Test').checked;
+
+      sessionStorage.setItem("selectedRatings", JSON.stringify(selectedRatings));
+            sessionStorage.setItem("priceMini", JSON.stringify(priceMini));
+            sessionStorage.setItem("priceMaxi", JSON.stringify(priceMaxi));
+            sessionStorage.setItem("adults", JSON.stringify(adults));
+            sessionStorage.setItem("children", JSON.stringify(children));
+            sessionStorage.setItem("hasBabyBeds", JSON.stringify(hasBabyBeds)); 
+
+      // Всё собираем в объект
+      const filters = {
+        priceRange: { min: priceMini, max: priceMaxi },
+        starRating,
+        adults,
+        children,
+        options: {
+          hasBabyBeds,
+          test1,
+          test2
+        }
       };
+      if(priceMin)
 
-      console.log('Настройки применены:', settings);
+      console.log(filters);
 
-      alert(
-        `✅ Настройки применены:\n\n` +
-        `Сортировка: ${sortValue === 'price' ? 'по цене' : 'по дате'}\n` +
-        `Прямые рейсы: ${direct ? 'да' : 'нет'}\n` +
-        `С пересадками: ${transfers ? 'да' : 'нет'}\n` +
-        `Авиакомпания: ${airline}`
-      );
+      // alert(JSON.stringify(filters, null, 2));
+    });
+    document.getElementById("resetFilters").addEventListener("click", () => {
+      sessionStorage.setItem("selectedRatings", JSON.stringify(-1));
+            sessionStorage.setItem("priceMini", JSON.stringify(0));
+            sessionStorage.setItem("priceMaxi", JSON.stringify(300000));
+            sessionStorage.setItem("adults", JSON.stringify(-1));
+            sessionStorage.setItem("children", JSON.stringify(0));
+            sessionStorage.setItem("hasBabyBeds", JSON.stringify(false));
+            selectedRatings = -1;
+            priceMini = 0;
+            priceMaxi = 300000;
+            adults = -1;
+            children = 0;
+            hasBabyBeds = false;
+            location.reload();
     });
     const priceMin = document.getElementById('priceMin');
     const priceMax = document.getElementById('priceMax');
@@ -994,9 +1115,11 @@ input[type=number] {
           tours.message == "Туры не найдены по указанным параметрам"
         ) {
           console.log(tours.message);
+          document.getElementById("gif").style.display = "flex";
         } else {
           const resultsContainer = document.getElementById("resultsContainer");
           let allTours = [...tours]; // сохраняем оригинальные туры
+          document.getElementById("gif").style.display = "none";
 
           // Функция генерации звёзд
           function generateStars(count) {
@@ -1099,14 +1222,57 @@ input[type=number] {
 
         // Обрабатываем клик по кнопке
         button.addEventListener('click', () => {
-        const query = input.value.trim();
+        let query = input.value.trim();
 
         if (!query) {
                 return;
             }
+      //       const priceMini = parseInt(document.getElementById('priceMin').value, 10);
+      // const priceMaxi = parseInt(document.getElementById('priceMax').value, 10);
+
+      // // Получаем рейтинг (нажатую звезду)
+      // const activeStars = document.querySelectorAll('#starRating span.active');
+      // const starRating = activeStars.length > 0
+      //   ? activeStars[activeStars.length - 1].dataset.value
+      //   : null;
+
+      // // Получаем количество взрослых и детей
+      // const counters = document.querySelectorAll('.counter');
+      // const adults = parseInt(counters[0].querySelector('.counter-input').value, 10);
+      // const children = parseInt(counters[1].querySelector('.counter-input').value, 10);
+
+      // Получаем состояние чекбоксов
+      // const hasBabyBeds = document.getElementById('directFlights').checked;
+
+            let query1 = query+' если я не упоминал цену то минимальная цена '+priceMini+' максимальная цена '+priceMaxi;
+            if(selectedRatings!=-1)
+            {
+              query1 = query1+' количество звёзд '+selectedRatings;
+            }
+            if(adults!=-1)
+            {
+              query1 = query1+' количество взрослых '+adults;
+            }
+            if(children!=0)
+            {
+              query1 = query1+' количество детей '+children;
+            }
+            if(hasBabyBeds!=-1 && hasBabyBeds!=false)
+            {
+              query1 = query1+' отдельная кровать для детей';
+            }
+            sessionStorage.setItem("selectedRatings", JSON.stringify(selectedRatings));
+            sessionStorage.setItem("priceMini", JSON.stringify(priceMini));
+            sessionStorage.setItem("priceMaxi", JSON.stringify(priceMaxi));
+            sessionStorage.setItem("adults", JSON.stringify(adults));
+            sessionStorage.setItem("children", JSON.stringify(children));
+            sessionStorage.setItem("hasBabyBeds", JSON.stringify(hasBabyBeds));
+
+
           button.textContent = "Поиск 🔍...";
           button.disabled = true; // отключаем кнопку, пока идёт запрос
-
+          let qu = query;
+          query = query1;
           const aiReq = {
             request: query,   // строка запроса
             response: "string"      // сервер заполнит
@@ -1119,7 +1285,8 @@ input[type=number] {
         })
         .then(async res => {
             const text = await res.text(); // читаем как текст
-            // console.log("Raw response:", text);
+            query = qu;
+            console.log("Raw response:", text);
 
             let data;
             try {
